@@ -76,36 +76,35 @@
           <div class="hidden sm:block sm:ml-6">
             <div class="flex space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a
-                href="#"
+              <router-link
+                to="/"
                 class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
                 aria-current="page"
-                ><router-link to="/">Home</router-link></a
+                >Home</router-link
               >
 
-              <a
-                href="#"
+              <router-link
+                to="/users"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                ><router-link to="/users">Users</router-link></a
+                >Users</router-link
               >
 
-              <a
-                href="#"
+              <router-link
+                to="/locations"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                ><router-link to="/locations">Locations</router-link></a
+                >Locations</router-link
               >
 
-              <a
-                href="#"
+              <router-link
+                to="/turn-templates"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >Turn Templates</router-link
               >
-                <router-link to="/turn-templates">Turn Templates</router-link>
-              </a>
-              <a
-                href="#"
+
+              <router-link
+                to="/calendar"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-              >
-                <router-link to="/calendar">Calendar</router-link></a
+                >Calendar</router-link
               >
             </div>
           </div>
