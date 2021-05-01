@@ -1,3 +1,10 @@
+<style>
+[aria-current='page'] {
+  background-color: rgba(255, 99, 71, 0.5);
+  cursor: pointer;
+}
+</style>
+
 <template>
   <!-- This example requires Tailwind CSS v2.0+ -->
   <nav class="bg-gray-800">
@@ -78,8 +85,7 @@
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <router-link
                 to="/"
-                class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                aria-current="page"
+                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >Home</router-link
               >
 

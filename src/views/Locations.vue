@@ -44,7 +44,7 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="(user, idx) in users" :key="idx">
+                <tr v-for="(user, idx) in locations" :key="idx">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="flex-shrink-0 h-10 w-10">
@@ -103,7 +103,7 @@ export default {
   data() {
     return {
       title: 'Sucursales',
-      users: [],
+      locations: [],
       defImg:
         'https://www.gravatar.com/avatar/3c58cbad936e4dbd5350510cf27146b2?d=mp&s=200',
     };
@@ -142,7 +142,7 @@ export default {
       };
     });
     users = users.sort(compareUsers);
-    this.users = users;
+    this.locations = users;
   },
 };
 </script>
