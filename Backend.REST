@@ -1,0 +1,22 @@
+GET http://localhost:3004/users HTTP/1.1
+
+###
+
+GET http://localhost:3004/locations HTTP/1.1
+
+###
+
+GET http://localhost:3004/positions HTTP/1.1
+
+###
+
+GET http://localhost:3004/contracts HTTP/1.1
+
+###
+
+GET http://localhost:3004/turnTemplates HTTP/1.1
+
+###
+GET http://localhost:3004/turns HTTP/1.1
+
+###
