@@ -81,7 +81,7 @@
 
 <script>
 import { fetchDataAsync } from '../services/fetch';
-import { compareUsers } from '../services/compare';
+import { sortArrayByProperty } from '../services/compare';
 export default {
   data() {
     return {
@@ -112,11 +112,11 @@ export default {
     const fetchedLocations = await fetchDataAsync(
       'http://localhost:3004/locations'
     );
-    this.users = fetchedUsers.sort(compareUsers);
+    this.users = sortArrayByProperty(fetchedUsers, 'firstName', 'string', -1);
     let locations = fetchedLocations.map((location) => {
       const users = this.users
         .filter((user) => {
-          const userLocationId = user.locationId[0]; //.shift();
+          const userLocationId = user.locationId[0];
           return location.id == userLocationId;
         })
         .map((u) => {
