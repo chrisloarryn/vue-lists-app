@@ -15,74 +15,57 @@
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Full Name
+                    Location Name
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Role
+                    Schedule
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Location
+                    Full Address
                   </th>
                   <th
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Legal Max Weekly Hours
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Status
+                    List of Workers
                   </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="(user, idx) in locations" :key="idx">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                      <div class="flex-shrink-0 h-10 w-10">
-                        <img
-                          name="user.firstName"
-                          class="h-10 w-10 rounded-full"
-                          :src="user.avatarUrl || defImg"
-                          alt="user.firstName"
-                        />
-                      </div>
-                      <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900">
-                          {{ `${user.firstName} ${user.lastName}` }}
-                        </div>
-                        <div class="text-sm text-gray-500">
-                          {{ user.email }}
-                        </div>
-                      </div>
-                    </div>
+                <tr v-for="(location, idx) in locations" :key="idx">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ location.name }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ user.positionName }}
+                    {{
+                      `Opens at: ${location.startTime} hrs. - Closes at: ${location.endTime} hrs.`
+                    }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ user.locationName }}
+                    {{ getFullAddress(location) }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span> {{ user.contractHours || 0 }} hours </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-full"
+                  >
+                    <ol
+                      v-for="({ fullName, employeeId }, idx) in location.users"
+                      :key="idx"
                     >
-                      {{ user.isActive ? 'Activo' : 'Inactivo' }}
-                    </div>
-                    <div class="text-sm text-gray-500">
-                      {{ user.employeeId }}
-                    </div>
+                      <li>
+                        {{ fullName }}
+                        <div
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                        >
+                          {{ employeeId }}
+                        </div>
+                      </li>
+                    </ol>
                   </td>
                 </tr>
 
@@ -104,6 +87,7 @@ export default {
     return {
       title: 'Sucursales',
       locations: [],
+      users: [],
       defImg:
         'https://www.gravatar.com/avatar/3c58cbad936e4dbd5350510cf27146b2?d=mp&s=200',
     };
@@ -112,37 +96,42 @@ export default {
     functionToLog: function () {
       console.log('sa');
     },
+    getFullAddress: (location) => {
+      return [
+        location.address1,
+        location.address2,
+        location.commune,
+        location.region,
+      ]
+        .filter((str) => str)
+        .join(', ');
+    },
   },
   async mounted() {
     const fetchedUsers = await fetchDataAsync('http://localhost:3004/users');
-    const fetchedPositions = await fetchDataAsync(
-      'http://localhost:3004/positions'
-    );
     const fetchedLocations = await fetchDataAsync(
       'http://localhost:3004/locations'
     );
-    const fetchedContracts = await fetchDataAsync(
-      'http://localhost:3004/contracts'
-    );
-    let users = fetchedUsers.map((user) => {
-      const position = fetchedPositions.find(
-        (p) => p.id == user.positionId[0] && p.name
-      );
-      const location = fetchedLocations.find(
-        (l) => l.id == user.locationId[0] && l.name
-      );
-      const contract = fetchedContracts.find(
-        (c) => c.id == user.contract && c.legalMaxWeeklyHours
-      );
+    this.users = fetchedUsers.sort(compareUsers);
+    let locations = fetchedLocations.map((location) => {
+      const users = this.users
+        .filter((user) => {
+          const userLocationId = user.locationId[0]; //.shift();
+          return location.id == userLocationId;
+        })
+        .map((u) => {
+          const { firstName, lastName, employeeId } = u;
+          return {
+            fullName: `${firstName} ${lastName}`,
+            employeeId,
+          };
+        });
       return {
-        ...user,
-        positionName: position.name,
-        locationName: location.name,
-        contractHours: contract.legalMaxWeeklyHours,
+        ...location,
+        users,
       };
     });
-    users = users.sort(compareUsers);
-    this.locations = users;
+    this.locations = locations;
   },
 };
 </script>
