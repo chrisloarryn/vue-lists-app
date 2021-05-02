@@ -98,7 +98,7 @@
 
 <script>
 import { fetchDataAsync } from '../services/fetch';
-import { compareUsers } from '../services/compare';
+import { sortArrayByProperty } from '../services/compare';
 export default {
   data() {
     return {
@@ -141,7 +141,7 @@ export default {
         contractHours: contract.legalMaxWeeklyHours,
       };
     });
-    users = users.sort(compareUsers);
+    users = sortArrayByProperty(fetchedUsers, 'employeeId', 'string', 1); // users.sort(compareUsers);
     this.users = users;
   },
 };
