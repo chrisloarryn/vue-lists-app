@@ -12,8 +12,7 @@ export const compareUsers = (a, b) => {
 export const sortArrayByProperty = (
   array,
   property,
-  type = 'number',
-  direction = 1
+  { type = 'number', direction = 1 }
 ) => {
   if (type === 'date')
     return array.sort(

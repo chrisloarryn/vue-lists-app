@@ -141,7 +141,7 @@ export default {
         contractHours: contract.legalMaxWeeklyHours,
       };
     });
-    users = sortArrayByProperty(fetchedUsers, 'employeeId', 'string', 1); // users.sort(compareUsers);
+    users = sortArrayByProperty(fetchedUsers, 'employeeId', { type: 'string' }); // users.sort(compareUsers);
     this.users = users;
   },
 };

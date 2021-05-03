@@ -45,7 +45,13 @@
                     scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    List of Workers
+                    Position Name
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    List of Locations
                   </th>
                 </tr>
               </thead>
@@ -66,20 +72,15 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {{ calculateWorkingTime(turn) }} hrs.
                   </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ turn.positionName || '[Sin Registrar]' }}
+                  </td>
                   <td
                     class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-full"
                   >
-                    <ol
-                      v-for="({ fullName, employeeId }, idx) in turn.users"
-                      :key="idx"
-                    >
+                    <ol v-for="(name, idx) in turn.locationsName" :key="idx">
                       <li>
-                        {{ fullName }}
-                        <div
-                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-                        >
-                          {{ employeeId }}
-                        </div>
+                        {{ name }}
                       </li>
                     </ol>
                   </td>
@@ -97,7 +98,7 @@
 
 <script>
 import { fetchDataAsync } from '../services/fetch';
-// import { sortArrayByProperty } from '../services/compare';
+import { sortArrayByProperty } from '../services/compare';
 export default {
   data() {
     return {
@@ -121,16 +122,6 @@ export default {
       difference = difference / 60 / 60 / 1000;
       return difference;
     },
-    /* getFullAddress: (turn) => {
-      return [
-        turn.address1,
-        turn.address2,
-        turn.commune,
-        turn.region,
-      ]
-        .filter((str) => str)
-        .join(', ');
-    }, */
   },
   async mounted() {
     const fetchedPositions = await fetchDataAsync(
@@ -143,10 +134,21 @@ export default {
       'http://localhost:3004/turnTemplates'
     );
     // this.users = sortArrayByProperty(fetchedUsers, 'firstName', 'string', -1);
-    let locations = fetchedLocations;
-    console.warn(fetchedPositions, locations);
-    console.log(fetchedTurnTemplates);
-    this.turnTemplates = fetchedTurnTemplates;
+    let locations = sortArrayByProperty(fetchedLocations, 'name', {
+      type: 'string',
+      direction: 1,
+    });
+    const getOneElement = (el) => locations.find((f) => el == f.id).name;
+    const turnTemplates = fetchedTurnTemplates.map((turn) => {
+      const position = fetchedPositions.find((f) => turn.positionId == f.id);
+      const locationsMod = turn?.locationId?.map(getOneElement);
+      return {
+        ...turn,
+        positionName: position?.name,
+        locationsName: locationsMod,
+      };
+    });
+    this.turnTemplates = turnTemplates;
   },
 };
 </script>

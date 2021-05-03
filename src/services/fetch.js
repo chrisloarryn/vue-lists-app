@@ -1,10 +1,8 @@
 /* eslint-disable prettier/prettier */
 export const fetchDataAsync = async (url) => {
   const res = await fetch(url)
-    .then(async (res) => await res.json())
-    .then(async (data) => await data)
-    .catch((err) => console.log(err.message))
-  return res
+  const response = await res.json()
+  return response
 }
 
 export const fetchDataPromise = (url) => {

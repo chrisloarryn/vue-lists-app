@@ -112,7 +112,10 @@ export default {
     const fetchedLocations = await fetchDataAsync(
       'http://localhost:3004/locations'
     );
-    this.users = sortArrayByProperty(fetchedUsers, 'firstName', 'string', -1);
+    this.users = sortArrayByProperty(fetchedUsers, 'firstName', {
+      type: 'string',
+      direction: -1,
+    });
     let locations = fetchedLocations.map((location) => {
       const users = this.users
         .filter((user) => {
